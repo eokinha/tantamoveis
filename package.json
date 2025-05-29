@@ -1,0 +1,11 @@
+json {
+    "name": "tanta-moveis",
+    "version": "1.0.0",
+    "private": true,
+    "scripts": {
+        "start": "vercel dev"
+    },
+    "dependencies": {
+        "@google/generative-ai": "^0.14.0"
+    }
+}
