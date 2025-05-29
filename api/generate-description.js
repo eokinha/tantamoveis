@@ -19,7 +19,6 @@ const modalProductPrice = document.getElementById('modal-product-price');
 const modalProductInstallments = document.getElementById('modal-product-installments');
 const modalProductImage = document.getElementById('modal-product-image');
 const modalProductDescription = document.getElementById('modal-product-description');
-const generateDescriptionBtn = document.getElementById('generate-description-btn');
 const generatedDescriptionOutput = document.getElementById('generated-description-output');
 const loadingIndicator = document.getElementById('loading-indicator');
 
@@ -57,46 +56,3 @@ productModal.addEventListener('click', function (e) {
     }
 });
 
-// Lógica para chamar a API Gemini para gerar descrição
-generateDescriptionBtn.addEventListener('click', async function () {
-    const productName = modalProductName.textContent;
-    const productBaseDescription = modalProductDescription.textContent;
-    const productInstallments = modalProductInstallments.textContent;
-
-    // Mostra o indicador de carregamento
-    loadingIndicator.classList.remove('hidden');
-    generatedDescriptionOutput.textContent = ''; // Limpa a descrição anterior
-
-    const prompt = `Gere uma descrição detalhada e apelativa para o produto "${productName}". Considere que a loja "Tanta Móveis" vende para um público de classe média a média baixa, focando em conforto, durabilidade, praticidade e bom preço. Mencione a facilidade de pagamento com crediário. A descrição base é: "${productBaseDescription}". Inclua também a informação de parcelamento: "${productInstallments}". Use uma linguagem acolhedora e direta, como se estivesse a falar com um cliente.`;
-
-    let chatHistory = [];
-    chatHistory.push({ role: "user", parts: [{ text: prompt }] });
-    const payload = { contents: chatHistory };
-    const apiKey = ""; // Se quiser usar modelos diferentes de gemini-2.0-flash ou imagen-3.0-generate-002, forneça uma chave de API aqui. Caso contrário, deixe como está.
-    const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
-
-    try {
-        const response = await fetch(apiUrl, {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload)
-        });
-        const result = await response.json();
-
-        if (result.candidates && result.candidates.length > 0 &&
-            result.candidates[0].content && result.candidates[0].content.parts &&
-            result.candidates[0].content.parts.length > 0) {
-            const text = result.candidates[0].content.parts[0].text;
-            generatedDescriptionOutput.textContent = text;
-        } else {
-            generatedDescriptionOutput.textContent = 'Não foi possível gerar a descrição. Tente novamente.';
-            console.error('Estrutura de resposta inesperada:', result);
-        }
-    } catch (error) {
-        generatedDescriptionOutput.textContent = 'Ocorreu um erro ao gerar a descrição. Por favor, tente novamente mais tarde.';
-        console.error('Erro ao chamar a API Gemini:', error);
-    } finally {
-        // Esconde o indicador de carregamento
-        loadingIndicator.classList.add('hidden');
-    }
-});
