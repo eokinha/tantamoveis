@@ -1,0 +1,539 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tanta Móveis - Seu Novo Lar Começa Aqui!</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #f8f8f8;
+            /* Um cinza muito claro para o fundo */
+        }
+
+        /* Estilos personalizados para o scrollbar (opcional, para um toque extra) */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: #888;
+            border-radius: 10px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: #555;
+        }
+
+        /* Estilos para o modal */
+        .modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            z-index: 1000;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.3s ease, visibility 0.3s ease;
+        }
+
+        .modal-overlay.show {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .modal-content {
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow-y: auto;
+            position: relative;
+            transform: translateY(-20px);
+            transition: transform 0.3s ease;
+        }
+
+        .modal-overlay.show .modal-content {
+            transform: translateY(0);
+        }
+
+        .close-button {
+            position: absolute;
+            top: 15px;
+            right: 15px;
+            background: none;
+            border: none;
+            font-size: 2rem;
+            cursor: pointer;
+            color: #333;
+        }
+
+        .loading-spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-left-color: #3b82f6;
+            border-radius: 50%;
+            width: 24px;
+            height: 24px;
+            animation: spin 1s linear infinite;
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 8px;
+        }
+
+        @keyframes spin {
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
+        }
+    </style>
+</head>
+
+<body class="text-gray-800">
+
+    <header class="bg-white shadow-md py-4 px-6 fixed w-full z-10 top-0">
+        <div class="container mx-auto flex justify-between items-center">
+            <h1 class="text-3xl font-bold text-blue-700">Tanta Móveis</h1>
+            <nav>
+                <ul class="flex space-x-6">
+                    <li><a href="#home"
+                            class="text-gray-700 hover:text-blue-700 font-medium transition duration-300 ease-in-out">Início</a>
+                    </li>
+                    <li><a href="#catalogo"
+                            class="text-gray-700 hover:text-blue-700 font-medium transition duration-300 ease-in-out">Catálogo</a>
+                    </li>
+                    <li><a href="#sobre"
+                            class="text-gray-700 hover:text-blue-700 font-medium transition duration-300 ease-in-out">Sobre
+                            Nós</a></li>
+                    <li><a href="#contato"
+                            class="text-gray-700 hover:text-blue-700 font-medium transition duration-300 ease-in-out">Contacto</a>
+                    </li>
+                </ul>
+            </nav>
+        </div>
+    </header>
+
+    <main class="pt-20">
+        <section id="home"
+            class="min-h-screen flex items-center justify-center bg-gradient-to-r from-blue-50 to-indigo-100 py-16 px-4">
+            <div class="text-center max-w-4xl mx-auto">
+                <h2 class="text-5xl md:text-6xl font-extrabold text-blue-800 mb-6 leading-tight">
+                    Tanta Móveis: O Seu Novo Lar Começa Aqui!
+                </h2>
+                <p class="text-xl md:text-2xl text-gray-700 mb-10">
+                    Móveis de qualidade com condições que cabem no seu bolso.
+                </p>
+                <div class="flex flex-col sm:flex-row justify-center gap-6 mb-12">
+                    <a href="#catalogo"
+                        class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-4 px-8 rounded-full shadow-lg transform hover:scale-105 transition duration-300 ease-in-out text-lg">
+                        Confira o Nosso Catálogo!
+                    </a>
+                    <a href="#contato"
+                        class="bg-green-500 hover:bg-green-600 text-white font-bold py-4 px-8 rounded-full shadow-lg transform hover:scale-105 transition duration-300 ease-in-out text-lg">
+                        Compre Agora com Crediário Fácil!
+                    </a>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mt-16">
+                    <div
+                        class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center transform hover:scale-105 transition duration-300 ease-in-out">
+                        <svg class="w-16 h-16 text-blue-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z">
+                            </path>
+                        </svg>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Crediário Próprio</h3>
+                        <p class="text-gray-600">Facilidade e flexibilidade para mobiliar a sua casa sem burocracia.</p>
+                    </div>
+                    <div
+                        class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center transform hover:scale-105 transition duration-300 ease-in-out">
+                        <svg class="w-16 h-16 text-green-500 mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"></path>
+                        </svg>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Entrega Rápida</h3>
+                        <p class="text-gray-600">Entregamos em Camaçari, Dias D'Ávila, Mata de São João e Salvador.</p>
+                    </div>
+                    <div
+                        class="bg-white p-6 rounded-lg shadow-lg flex flex-col items-center transform hover:scale-105 transition duration-300 ease-in-out">
+                        <svg class="w-16 h-16 text-purple-500 mb-4" fill="none" stroke="currentColor"
+                            viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10">
+                            </path>
+                        </svg>
+                        <h3 class="text-xl font-semibold text-gray-800 mb-2">Móveis Novos e Usados</h3>
+                        <p class="text-gray-600">Opções para todos os gostos e orçamentos, com a qualidade que você
+                            merece.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="catalogo" class="py-16 px-4 bg-gray-50">
+            <div class="container mx-auto">
+                <h2 class="text-4xl font-bold text-center text-blue-800 mb-12">O Nosso Catálogo de Móveis</h2>
+
+                <div class="flex flex-wrap justify-center gap-4 mb-10">
+                    <button
+                        class="bg-blue-500 hover:bg-blue-600 text-white font-semibold py-2 px-6 rounded-full transition duration-300">Todos</button>
+                    <button
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-6 rounded-full transition duration-300">Sofás</button>
+                    <button
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-6 rounded-full transition duration-300">Mesas</button>
+                    <button
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-6 rounded-full transition duration-300">Camas</button>
+                    <button
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-6 rounded-full transition duration-300">Armários</button>
+                    <button
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-6 rounded-full transition duration-300">Usados</button>
+                    <button
+                        class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-semibold py-2 px-6 rounded-full transition duration-300">Novos</button>
+                </div>
+
+                <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8" id="product-grid">
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 ease-in-out product-card"
+                        data-name="Sofá Conforto 3 Lugares" data-price="1200,00"
+                        data-installments="10x no Crediário Fácil!"
+                        data-image="https://placehold.co/400x300/E0E7FF/333333?text=Sofá+Conforto"
+                        data-description="Um sofá espaçoso e confortável, ideal para a sua sala de estar. Tecido resistente e design moderno.">
+                        <img src="https://placehold.co/400x300/E0E7FF/333333?text=Sofá+Conforto" alt="Sofá Conforto"
+                            class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">Sofá Conforto 3 Lugares</h3>
+                            <p class="text-gray-700 text-lg font-bold mb-3">R$ 1.200,00</p>
+                            <p class="text-green-600 font-medium mb-4">A partir de 10x no Crediário Fácil!</p>
+                            <button
+                                class="open-product-modal block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-3 rounded-md font-semibold transition duration-300">Ver
+                                Detalhes</button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 ease-in-out product-card"
+                        data-name="Mesa de Jantar 4 Cadeiras" data-price="850,00"
+                        data-installments="8x no Crediário Fácil!"
+                        data-image="https://placehold.co/400x300/D1FAE5/333333?text=Mesa+Jantar"
+                        data-description="Mesa de jantar elegante e compacta, perfeita para pequenos espaços. Acompanha 4 cadeiras confortáveis.">
+                        <img src="https://placehold.co/400x300/D1FAE5/333333?text=Mesa+Jantar"
+                            alt="Mesa de Jantar Moderna" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">Mesa de Jantar 4 Cadeiras</h3>
+                            <p class="text-gray-700 text-lg font-bold mb-3">R$ 850,00</p>
+                            <p class="text-green-600 font-medium mb-4">A partir de 8x no Crediário Fácil!</p>
+                            <button
+                                class="open-product-modal block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-3 rounded-md font-semibold transition duration-300">Ver
+                                Detalhes</button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 ease-in-out product-card"
+                        data-name="Cama de Casal Box" data-price="990,00" data-installments="10x no Crediário Fácil!"
+                        data-image="https://placehold.co/400x300/FFE4E6/333333?text=Cama+Casal"
+                        data-description="Cama de casal box com colchão ortopédico. Noites de sono tranquilas e reparadoras.">
+                        <img src="https://placehold.co/400x300/FFE4E6/333333?text=Cama+Casal" alt="Cama de Casal"
+                            class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">Cama de Casal Box</h3>
+                            <p class="text-gray-700 text-lg font-bold mb-3">R$ 990,00</p>
+                            <p class="text-green-600 font-medium mb-4">A partir de 10x no Crediário Fácil!</p>
+                            <button
+                                class="open-product-modal block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-3 rounded-md font-semibold transition duration-300">Ver
+                                Detalhes</button>
+                        </div>
+                    </div>
+                    <div class="bg-white rounded-lg shadow-lg overflow-hidden transform hover:scale-105 transition duration-300 ease-in-out product-card"
+                        data-name="Guarda-Roupa 6 Portas (Usado)" data-price="550,00"
+                        data-installments="5x no Crediário Fácil!"
+                        data-image="https://placehold.co/400x300/FFFBEB/333333?text=Guarda+Roupa+Usado"
+                        data-description="Guarda-roupa espaçoso de 6 portas em bom estado. Ideal para organizar suas roupas e acessórios.">
+                        <img src="https://placehold.co/400x300/FFFBEB/333333?text=Guarda+Roupa+Usado"
+                            alt="Guarda Roupa Usado" class="w-full h-48 object-cover">
+                        <div class="p-6">
+                            <h3 class="text-xl font-semibold text-gray-900 mb-2">Guarda-Roupa 6 Portas (Usado)</h3>
+                            <p class="text-gray-700 text-lg font-bold mb-3">R$ 550,00</p>
+                            <p class="text-green-600 font-medium mb-4">A partir de 5x no Crediário Fácil!</p>
+                            <button
+                                class="open-product-modal block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-3 rounded-md font-semibold transition duration-300">Ver
+                                Detalhes</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <section id="sobre" class="py-16 px-4 bg-white">
+            <div class="container mx-auto max-w-4xl">
+                <h2 class="text-4xl font-bold text-center text-blue-800 mb-12">Sobre a Tanta Móveis</h2>
+                <div class="text-lg text-gray-700 leading-relaxed">
+                    <p class="mb-6">
+                        A Tanta Móveis nasceu do sonho do Sr. Tanta em oferecer soluções de mobiliário de qualidade para
+                        as famílias de Camaçari e região. Com anos de experiência e um compromisso inabalável com a
+                        satisfação do cliente, construímos uma história de confiança e dedicação.
+                    </p>
+                    <p class="mb-6">
+                        Entendemos que mobiliar um lar é um passo importante, e por isso, nos dedicamos a tornar esse
+                        processo o mais acessível e prazeroso possível. A nossa seleção inclui móveis novos e usados,
+                        todos criteriosamente avaliados para garantir durabilidade e bom gosto, atendendo a diversos
+                        estilos e orçamentos.
+                    </p>
+                    <h3 class="text-2xl font-semibold text-gray-800 mb-4">Os Nossos Diferenciais:</h3>
+                    <ul class="list-disc list-inside space-y-2 mb-6">
+                        <li><span class="font-bold text-blue-700">Crediário Próprio Facilitado:</span> Acreditamos que
+                            todos merecem ter o lar dos seus sonhos. Por isso, oferecemos um crediário com condições
+                            especiais, sem burocracia e com parcelas que cabem no seu bolso.</li>
+                        <li><span class="font-bold text-green-700">Entrega Conveniente:</span> Levamos os seus móveis
+                            até si! Realizamos entregas rápidas e seguras nas regiões de Camaçari, Dias D'Ávila, Mata de
+                            São João e Salvador.</li>
+                        <li><span class="font-bold text-purple-700">Qualidade e Variedade:</span> Seja novo ou seminovo,
+                            cada móvel no nosso catálogo é escolhido a dedo para garantir que leve para casa um produto
+                            de valor e durabilidade.</li>
+                        <li><span class="font-bold text-yellow-700">Atendimento Personalizado:</span> A nossa equipa
+                            está pronta para o ajudar a encontrar o móvel perfeito, com um atendimento acolhedor e
+                            focado nas suas necessidades.</li>
+                    </ul>
+                    <p>
+                        Venha visitar-nos ou explore o nosso catálogo online e descubra como a Tanta Móveis pode ajudar
+                        a construir o seu novo lar!
+                    </p>
+                </div>
+            </div>
+        </section>
+
+        <section id="contato" class="py-16 px-4 bg-blue-50">
+            <div class="container mx-auto max-w-4xl">
+                <h2 class="text-4xl font-bold text-center text-blue-800 mb-12">Fale Connosco</h2>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-6">Envie a Sua Mensagem</h3>
+                        <form action="#" method="POST" class="space-y-6">
+                            <div>
+                                <label for="nome-contato"
+                                    class="block text-gray-700 text-sm font-bold mb-2">Nome:</label>
+                                <input type="text" id="nome-contato" name="nome"
+                                    class="shadow appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required>
+                            </div>
+                            <div>
+                                <label for="email-contato"
+                                    class="block text-gray-700 text-sm font-bold mb-2">Email:</label>
+                                <input type="email" id="email-contato" name="email"
+                                    class="shadow appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required>
+                            </div>
+                            <div>
+                                <label for="telefone-contato"
+                                    class="block text-gray-700 text-sm font-bold mb-2">Telefone (WhatsApp):</label>
+                                <input type="tel" id="telefone-contato" name="telefone"
+                                    class="shadow appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500">
+                            </div>
+                            <div>
+                                <label for="mensagem-contato"
+                                    class="block text-gray-700 text-sm font-bold mb-2">Mensagem:</label>
+                                <textarea id="mensagem-contato" name="mensagem" rows="5"
+                                    class="shadow appearance-none border rounded-md w-full py-3 px-4 text-gray-700 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                    required></textarea>
+                            </div>
+                            <button type="submit"
+                                class="bg-blue-600 hover:bg-blue-700 text-white font-bold py-3 px-6 rounded-md shadow-md transform hover:scale-105 transition duration-300 ease-in-out w-full">
+                                Enviar Mensagem
+                            </button>
+                        </form>
+                    </div>
+
+                    <div class="bg-white p-8 rounded-lg shadow-lg">
+                        <h3 class="text-2xl font-semibold text-gray-800 mb-6">Os Nossos Contactos</h3>
+                        <div class="space-y-4 text-lg text-gray-700">
+                            <p><strong class="text-blue-700">Telefone/WhatsApp:</strong> (71) 9XXXX-XXXX</p>
+                            <p><strong class="text-blue-700">Email:</strong> contato@tantamoveis.com.br</p>
+                            <p><strong class="text-blue-700">Morada:</strong> Rua da Loja, 123, Centro, Camaçari - BA
+                            </p>
+                            <p><strong class="text-blue-700">Horário de Funcionamento:</strong></p>
+                            <ul class="list-disc list-inside ml-4">
+                                <li>Segunda a Sexta: 09:00 - 18:00</li>
+                                <li>Sábado: 09:00 - 13:00</li>
+                                <li>Domingo: Fechado</li>
+                            </ul>
+                        </div>
+                        <h3 class="text-2xl font-semibold text-gray-800 mt-8 mb-4">Onde Estamos</h3>
+                        <div class="aspect-w-16 aspect-h-9 rounded-lg overflow-hidden shadow-md">
+                            <iframe
+                                src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d15582.023247471253!2d-38.3240954845012!3d-12.69748679051566!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x71661858a2d17c9%3A0x86e6c1c0e3e2c3e!2sCama%C3%A7ari%2C%20BA!5e0!3m2!1spt-BR!2sbr!4v1700000000000!5m2!1spt-BR!2sbr"
+                                width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"
+                                referrerpolicy="no-referrer-when-downgrade">
+                            </iframe>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+    </main>
+
+    <footer class="bg-gray-800 text-white py-8 px-4">
+        <div class="container mx-auto text-center">
+            <p>© 2025 Tanta Móveis. Todos os direitos reservados.</p>
+            <div class="flex justify-center space-x-6 mt-4">
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Facebook</a>
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300">Instagram</a>
+                <a href="#" class="text-gray-400 hover:text-white transition duration-300">WhatsApp</a>
+            </div>
+        </div>
+    </footer>
+
+    <div id="product-modal" class="modal-overlay">
+        <div class="modal-content w-full md:w-3/4 lg:w-1/2">
+            <button class="close-button" id="close-modal">&times;</button>
+            <div class="flex flex-col md:flex-row gap-6">
+                <div class="md:w-1/2">
+                    <img id="modal-product-image" src="" alt="Imagem do Produto"
+                        class="w-full h-64 object-cover rounded-lg mb-4">
+                    <h3 id="modal-product-name" class="text-3xl font-bold text-gray-900 mb-2"></h3>
+                    <p id="modal-product-price" class="text-gray-700 text-2xl font-bold mb-2"></p>
+                    <p id="modal-product-installments" class="text-green-600 font-semibold mb-4"></p>
+                    <button id="generate-description-btn"
+                        class="bg-purple-600 hover:bg-purple-700 text-white font-bold py-3 px-6 rounded-md shadow-md transform hover:scale-105 transition duration-300 ease-in-out w-full mb-4">
+                        ✨ Gerar Descrição Detalhada
+                    </button>
+                    <a href="#contato"
+                        class="block w-full bg-blue-600 hover:bg-blue-700 text-white text-center py-3 rounded-md font-semibold transition duration-300">Quero
+                        Comprar / Entrar em Contacto</a>
+                </div>
+                <div class="md:w-1/2">
+                    <h4 class="text-xl font-semibold text-gray-800 mb-3">Descrição do Produto:</h4>
+                    <p id="modal-product-description" class="text-gray-700 leading-relaxed mb-4"></p>
+                    <div id="loading-indicator" class="hidden text-center py-4">
+                        <div class="loading-spinner"></div>
+                        <span class="text-gray-600">A gerar descrição...</span>
+                    </div>
+                    <div id="generated-description-output"
+                        class="bg-gray-100 p-4 rounded-md text-gray-800 leading-relaxed border border-gray-200">
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // JavaScript para rolagem suave para as seções
+        document.querySelectorAll('nav a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+
+        // Lógica do Modal de Detalhes do Produto
+        const productModal = document.getElementById('product-modal');
+        const closeModalBtn = document.getElementById('close-modal');
+        const openProductModalBtns = document.querySelectorAll('.open-product-modal');
+        const modalProductName = document.getElementById('modal-product-name');
+        const modalProductPrice = document.getElementById('modal-product-price');
+        const modalProductInstallments = document.getElementById('modal-product-installments');
+        const modalProductImage = document.getElementById('modal-product-image');
+        const modalProductDescription = document.getElementById('modal-product-description');
+        const generateDescriptionBtn = document.getElementById('generate-description-btn');
+        const generatedDescriptionOutput = document.getElementById('generated-description-output');
+        const loadingIndicator = document.getElementById('loading-indicator');
+
+        // Adiciona evento de clique para abrir o modal
+        openProductModalBtns.forEach(button => {
+            button.addEventListener('click', function () {
+                const productCard = this.closest('.product-card');
+                const productName = productCard.dataset.name;
+                const productPrice = productCard.dataset.price;
+                const productInstallments = productCard.dataset.installments;
+                const productImage = productCard.dataset.image;
+                const productBaseDescription = productCard.dataset.description;
+
+                modalProductName.textContent = productName;
+                modalProductPrice.textContent = `R$ ${productPrice}`;
+                modalProductInstallments.textContent = `A partir de ${productInstallments}`;
+                modalProductImage.src = productImage;
+                modalProductImage.alt = productName;
+                modalProductDescription.textContent = productBaseDescription;
+                generatedDescriptionOutput.textContent = 'Clique no botão "Gerar Descrição Detalhada" para uma descrição mais completa!'; // Limpa ou define texto padrão
+
+                productModal.classList.add('show');
+            });
+        });
+
+        // Adiciona evento de clique para fechar o modal
+        closeModalBtn.addEventListener('click', function () {
+            productModal.classList.remove('show');
+        });
+
+        // Fecha o modal ao clicar fora do conteúdo
+        productModal.addEventListener('click', function (e) {
+            if (e.target === productModal) {
+                productModal.classList.remove('show');
+            }
+        });
+
+        // Lógica para chamar a API Gemini para gerar descrição
+        generateDescriptionBtn.addEventListener('click', async function () {
+            const productName = modalProductName.textContent;
+            const productBaseDescription = modalProductDescription.textContent;
+            const productInstallments = modalProductInstallments.textContent;
+
+            // Mostra o indicador de carregamento
+            loadingIndicator.classList.remove('hidden');
+            generatedDescriptionOutput.textContent = ''; // Limpa a descrição anterior
+
+            const prompt = `Gere uma descrição detalhada e apelativa para o produto "${productName}". Considere que a loja "Tanta Móveis" vende para um público de classe média a média baixa, focando em conforto, durabilidade, praticidade e bom preço. Mencione a facilidade de pagamento com crediário. A descrição base é: "${productBaseDescription}". Inclua também a informação de parcelamento: "${productInstallments}". Use uma linguagem acolhedora e direta, como se estivesse a falar com um cliente.`;
+
+            let chatHistory = [];
+            chatHistory.push({ role: "user", parts: [{ text: prompt }] });
+            const payload = { contents: chatHistory };
+            const apiKey = ""; // Se quiser usar modelos diferentes de gemini-2.0-flash ou imagen-3.0-generate-002, forneça uma chave de API aqui. Caso contrário, deixe como está.
+            const apiUrl = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${apiKey}`;
+
+            try {
+                const response = await fetch(apiUrl, {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify(payload)
+                });
+                const result = await response.json();
+
+                if (result.candidates && result.candidates.length > 0 &&
+                    result.candidates[0].content && result.candidates[0].content.parts &&
+                    result.candidates[0].content.parts.length > 0) {
+                    const text = result.candidates[0].content.parts[0].text;
+                    generatedDescriptionOutput.textContent = text;
+                } else {
+                    generatedDescriptionOutput.textContent = 'Não foi possível gerar a descrição. Tente novamente.';
+                    console.error('Estrutura de resposta inesperada:', result);
+                }
+            } catch (error) {
+                generatedDescriptionOutput.textContent = 'Ocorreu um erro ao gerar a descrição. Por favor, tente novamente mais tarde.';
+                console.error('Erro ao chamar a API Gemini:', error);
+            } finally {
+                // Esconde o indicador de carregamento
+                loadingIndicator.classList.add('hidden');
+            }
+        });
+    </script>
+</body>
+
+</html>
